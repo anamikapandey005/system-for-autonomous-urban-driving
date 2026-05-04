@@ -17,10 +17,9 @@ class PerceptionModule:
     def process_frame(self, image_array):
         """
         Run object detection on a CARLA camera frame.
-        image_array: numpy array of shape (H, W, 3) in RGB format.
+        image_array: numpy array of shape (H, W, 3) in BGR format (CARLA default).
         """
-        # YOLOv8 expects BGR format natively if using cv2, but works with RGB if specified.
-        # CARLA gives RGB. We pass it directly to model.
+        # YOLOv8 (ultralytics) handles BGR numpy arrays natively.
         results = self.model(image_array, verbose=False, device=self.device)[0]
         
         detected_objects = []
@@ -32,7 +31,7 @@ class PerceptionModule:
             class_id = int(box.cls[0].item())
             class_name = self.model.names[class_id]
             
-            # We are primarily interested in vehicles, pedestrians, and cyclists (class 0: person, 1: bicycle, 2: car, 3: motorcycle, 5: bus, 7: truck)
+            # We are primarily interested in vehicles, pedestrians, and cyclists
             if class_name in ['person', 'car', 'bicycle', 'motorcycle', 'bus', 'truck']:
                 detected_objects.append({
                     'class': class_name,
@@ -46,9 +45,8 @@ class PerceptionModule:
         """
         Utility to draw bounding boxes on the image for visualization.
         """
+        # Image is already in BGR format from CARLA, which cv2 uses.
         img_copy = image_array.copy()
-        # Convert RGB to BGR for OpenCV drawing
-        img_copy = cv2.cvtColor(img_copy, cv2.COLOR_RGB2BGR)
         
         for det in detections:
             x1, y1, x2, y2 = map(int, det['bbox'])

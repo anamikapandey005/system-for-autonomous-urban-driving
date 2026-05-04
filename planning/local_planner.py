@@ -4,7 +4,7 @@ from planning.cost_functions import evaluate_total_cost
 
 class LocalPlanner:
     def __init__(self, target_velocity=30.0):
-        self.target_velocity = target_velocity # km/h
+        self.target_velocity = target_velocity / 3.6 # convert km/h to m/s
         
     def generate_candidate_trajectories(self, current_state, target_waypoint):
         """
@@ -13,9 +13,9 @@ class LocalPlanner:
         current_state: (x, y, v, yaw)
         """
         trajectories = []
-        # A simple trajectory roll-out
-        for steer_bias in [-0.2, -0.1, 0.0, 0.1, 0.2]:
-            for accel_bias in [-2.0, 0.0, 2.0]:
+        # A simple trajectory roll-out with finer sampling
+        for steer_bias in [-0.5, -0.4, -0.3, -0.2, -0.1, -0.05, 0.0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]:
+            for accel_bias in [-8.0, -5.0, -2.0, 0.0, 1.0, 2.0, 4.0, 8.0]:
                 traj = []
                 x, y, v, yaw = current_state
                 steer = steer_bias
@@ -25,7 +25,7 @@ class LocalPlanner:
                 for _ in range(20):
                     x += v * np.cos(yaw) * 0.1
                     y += v * np.sin(yaw) * 0.1
-                    v += accel * 0.1
+                    v = max(0.0, v + accel * 0.1)
                     yaw += steer * 0.1
                     traj.append((x, y, v, accel, steer))
                 trajectories.append(traj)
@@ -44,7 +44,7 @@ class LocalPlanner:
         best_trajectory = None
         
         for traj in candidates:
-            cost = evaluate_total_cost(traj, obstacles, self.target_velocity, traffic_rules)
+            cost = evaluate_total_cost(traj, obstacles, self.target_velocity, traffic_rules, target_waypoint)
             if cost < best_cost:
                 best_cost = cost
                 best_trajectory = traj
