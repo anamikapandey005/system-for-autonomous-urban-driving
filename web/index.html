@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Driving Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="glass-panel">
+            <h1>Autonomous Urban Driving V3.0</h1>
+            <div class="status-indicator">
+                <span class="dot pulse"></span>
+                <span>System Active</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Canvas Container -->
+            <div class="canvas-container glass-panel">
+                <h2>Live Simulation View (4-Way Intersection)</h2>
+                <canvas id="simCanvas" width="800" height="400"></canvas>
+            </div>
+
+            <!-- Telemetry Sidebar -->
+            <aside class="telemetry glass-panel">
+                <h2>Real-Time Telemetry</h2>
+                
+                <div class="metric-card">
+                    <h3>Velocity (Efficiency)</h3>
+                    <div class="value" id="val-speed">0.0 <span class="unit">m/s</span></div>
+                    <div class="progress-bar"><div class="fill" id="bar-speed" style="width: 0%; background: #3b82f6;"></div></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Acceleration (Comfort)</h3>
+                    <div class="value" id="val-accel">0.0 <span class="unit">m/s²</span></div>
+                    <div class="progress-bar"><div class="fill" id="bar-accel" style="width: 50%; background: #10b981;"></div></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Steering Angle</h3>
+                    <div class="value" id="val-steer">0.0 <span class="unit">°</span></div>
+                </div>
+
+                <div class="metric-card warning" id="warning-card">
+                    <h3>Safety Status</h3>
+                    <div class="value" style="color: #ef4444; font-size: 1.5rem;">ALL CLEAR</div>
+                </div>
+            </aside>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

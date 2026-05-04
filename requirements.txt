@@ -1,0 +1,11 @@
+# CARLA Python API requires a specific version usually bundled with the simulator,
+# but we can install the client library from PyPI (e.g. for CARLA 0.9.15)
+carla==0.9.15
+numpy
+opencv-python
+pygame
+matplotlib
+scipy
+torch
+torchvision
+ultralytics # For YOLOv8
